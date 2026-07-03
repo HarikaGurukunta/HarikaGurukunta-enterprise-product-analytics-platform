@@ -13,3 +13,10 @@ CREATE TABLE fact_orders (
     quantity INT,
     revenue DECIMAL(10,2)
 );
+
+CREATE TABLE fact_web_events (
+    event_id INT PRIMARY KEY,
+    customer_id INT,
+    event_type VARCHAR(50),
+    event_date DATE
+);
