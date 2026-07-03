@@ -72,3 +72,10 @@ FROM fact_web_events
 GROUP BY event_type
 ORDER BY unique_customers DESC;
 
+
+CREATE TABLE fact_web_events (
+    event_id INT PRIMARY KEY,
+    customer_id INT,
+    event_type VARCHAR(50),
+    event_date DATE
+);
