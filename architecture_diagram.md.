@@ -1,0 +1,70 @@
+# Enterprise Product Analytics Platform Architecture
+
+```mermaid
+flowchart TD
+
+A[Customers CSV] --> E[ETL Pipeline]
+B[Products CSV] --> E
+C[Orders CSV] --> E
+D[Web Events CSV] --> E
+
+E --> F[Data Quality Checks]
+F --> G[Processed Data Layer]
+
+G --> H[SQL Analytics]
+
+H --> I[Revenue Analysis]
+H --> J[Customer Lifetime Value]
+H --> K[Cohort Analysis]
+H --> L[Funnel Analysis]
+H --> M[Retention Analysis]
+
+I --> N[Power BI Dashboard]
+J --> N
+K --> N
+L --> N
+M --> N
+
+N --> O[Executive Overview]
+N --> P[Customer 360]
+N --> Q[Product Performance]
+N --> R[Funnel Dashboard]
+N --> S[Cohort Dashboard]
+
+O --> T[Business Insights]
+P --> T
+Q --> T
+R --> T
+S --> T
+```
+
+## Components
+
+### Data Sources
+- Customers
+- Products
+- Orders
+- Web Events
+
+### ETL Layer
+- Data Validation
+- Duplicate Removal
+- Null Handling
+- Data Quality Checks
+
+### Analytics Layer
+- Revenue Analysis
+- Customer Lifetime Value (CLV)
+- Funnel Analysis
+- Cohort Analysis
+- Retention Analysis
+
+### Reporting Layer
+- Power BI Executive Dashboard
+- Customer 360 Dashboard
+- Product Performance Dashboard
+- Funnel Dashboard
+- Cohort Dashboard
+
+### Business Outcome
+Provides actionable insights into customer behavior, revenue trends, product performance, and customer retention.
