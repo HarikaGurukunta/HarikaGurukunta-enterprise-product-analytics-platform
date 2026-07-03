@@ -1,90 +1,79 @@
--- Customer Lifetime Value
-SELECT
-    customer_id,
-    SUM(revenue) AS customer_lifetime_value
-FROM fact_orders
-GROUP BY customer_id
-ORDER BY customer_lifetime_value DESC;
+import pandas as pd
+import numpy as np
 
--- Top 10 Customers by Revenue
-SELECT
-    customer_id,
-    SUM(revenue) AS total_revenue
-FROM fact_orders
-GROUP BY customer_id
-ORDER BY total_revenue DESC
-LIMIT 10;
+np.random.seed(42)
 
--- Monthly Revenue Trend
-SELECT
-    DATE_TRUNC('month', order_date) AS month,
-    SUM(revenue) AS monthly_revenue
-FROM fact_orders
-GROUP BY month
-ORDER BY month;
+# Customers Data
+customers = pd.DataFrame({
+    "customer_id": range(1, 1001),
+    "customer_name": [f"Customer_{i}" for i in range(1, 1001)],
+    "age": np.random.randint(18, 70, 1000),
+    "city": np.random.choice(
+        ["New York", "Chicago", "Dallas", "Los Angeles"],
+        1000
+    ),
+    "signup_date": pd.date_range(
+        start="2023-01-01",
+        periods=1000,
+        freq="D"
+    )
+})
 
--- Revenue by Product Category
-SELECT
-    p.category,
-    SUM(o.revenue) AS total_revenue
-FROM fact_orders o
-JOIN dim_products p
-    ON o.product_id = p.product_id
-GROUP BY p.category
-ORDER BY total_revenue DESC;
-
--- Monthly Order Volume
-SELECT
-    DATE_TRUNC('month', order_date) AS month,
-    COUNT(order_id) AS total_orders
-FROM fact_orders
-GROUP BY month
-ORDER BY month;
-
--- Cohort Analysis
-WITH customer_cohort AS (
-    SELECT
-        customer_id,
-        MIN(DATE_TRUNC('month', order_date)) AS cohort_month
-    FROM fact_orders
-    GROUP BY customer_id
-)
-SELECT
-    cohort_month,
-    COUNT(DISTINCT customer_id) AS customers
-FROM customer_cohort
-GROUP BY cohort_month
-ORDER BY cohort_month;
-
--- Funnel Analysis
-SELECT
-    event_type,
-    COUNT(DISTINCT customer_id) AS unique_customers
-FROM fact_web_events
-GROUP BY event_type
-ORDER BY unique_customers DESC;
-
--- Retention Analysis
-WITH first_purchase AS (
-    SELECT
-        customer_id,
-        MIN(order_date) AS first_order_date
-    FROM fact_orders
-    GROUP BY customer_id
-),
-repeat_customers AS (
-    SELECT
-        o.customer_id,
-        COUNT(o.order_id) AS total_orders
-    FROM fact_orders o
-    GROUP BY o.customer_id
-)
-SELECT
-    COUNT(CASE WHEN total_orders > 1 THEN customer_id END) AS repeat_customers,
-    COUNT(customer_id) AS total_customers,
-    ROUND(
-        COUNT(CASE WHEN total_orders > 1 THEN customer_id END) * 100.0
-        / COUNT(customer_id),
+# Products Data
+products = pd.DataFrame({
+    "product_id": range(1, 101),
+    "product_name": [f"Product_{i}" for i in range(1, 101)],
+    "category": np.random.choice(
+        ["Electronics", "Clothing", "Home", "Beauty"],
+        100
+    ),
+    "price": np.round(
+        np.random.uniform(10, 500, 100),
         2
-    ) AS retention_rate_percentage
-FROM repeat_customers;
+    )
+})
+
+# Orders Data
+orders = pd.DataFrame({
+    "order_id": range(1, 10001),
+    "customer_id": np.random.randint(1, 1001, 10000),
+    "product_id": np.random.randint(1, 101, 10000),
+    "order_date": pd.to_datetime(
+        np.random.choice(
+            pd.date_range("2023-01-01", "2025-12-31"),
+            10000
+        )
+    ),
+    "quantity": np.random.randint(1, 5, 10000)
+})
+
+orders = orders.merge(
+    products[["product_id", "price"]],
+    on="product_id"
+)
+
+orders["revenue"] = orders["quantity"] * orders["price"]
+
+# Web Events Data
+web_events = pd.DataFrame({
+    "event_id": range(1, 20001),
+    "customer_id": np.random.randint(1, 1001, 20000),
+    "event_type": np.random.choice(
+        ["Page View", "Product View", "Add to Cart", "Checkout", "Purchase"],
+        20000
+    ),
+    "event_date": pd.to_datetime(
+        np.random.choice(
+            pd.date_range("2023-01-01", "2025-12-31"),
+            20000
+        )
+    )
+})
+
+# Save Files
+customers.to_csv("data/raw/customers.csv", index=False)
+products.to_csv("data/raw/products.csv", index=False)
+orders.to_csv("data/raw/orders.csv", index=False)
+web_events.to_csv("data/raw/web_events.csv", index=False)
+
+print("Customer, product, order, and web event data generated successfully!")
