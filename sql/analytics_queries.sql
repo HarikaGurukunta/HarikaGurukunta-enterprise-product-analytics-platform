@@ -62,3 +62,12 @@ SELECT
 FROM customer_cohort
 GROUP BY cohort_month
 ORDER BY cohort_month;
+
+-- Funnel Analysis
+
+SELECT
+    event_type,
+    COUNT(DISTINCT customer_id) AS unique_customers
+FROM fact_web_events
+GROUP BY event_type
+ORDER BY unique_customers DESC;
