@@ -1,24 +1,74 @@
-CREATE TABLE dim_customers (
-    customer_id INT PRIMARY KEY,
-    customer_name VARCHAR(100),
-    gender VARCHAR(20),
-    age INT,
-    city VARCHAR(100),
-    signup_date DATE
-);
+-- Customer Lifetime Value
 
-CREATE TABLE dim_products (
-    product_id INT PRIMARY KEY,
-    product_name VARCHAR(100),
-    category VARCHAR(50),
-    price DECIMAL(10,2)
-);
+SELECT
+    customer_id,
+    SUM(revenue) AS customer_lifetime_value
+FROM fact_orders
+GROUP BY customer_id
+ORDER BY customer_lifetime_value DESC;
 
-CREATE TABLE fact_orders (
-    order_id INT PRIMARY KEY,
-    customer_id INT,
-    product_id INT,
-    order_date DATE,
-    quantity INT,
-    revenue DECIMAL(10,2)
-);
+-- Top 10 Customers by Revenue
+
+SELECT
+    customer_id,
+    SUM(revenue) AS total_revenue
+FROM fact_orders
+GROUP BY customer_id
+ORDER BY total_revenue DESC
+LIMIT 10;
+
+-- Monthly Revenue Trend
+
+SELECT
+    DATE_TRUNC('month', order_date) AS month,
+    SUM(revenue) AS monthly_revenue
+FROM fact_orders
+GROUP BY month
+ORDER BY month;
+
+-- Revenue by Product Category
+
+SELECT
+    p.category,
+    SUM(o.revenue) AS total_revenue
+FROM fact_orders o
+JOIN dim_products p
+    ON o.product_id = p.product_id
+GROUP BY p.category
+ORDER BY total_revenue DESC;
+
+-- Monthly Order Volume
+
+SELECT
+    DATE_TRUNC('month', order_date) AS month,
+    COUNT(order_id) AS total_orders
+FROM fact_orders
+GROUP BY month
+ORDER BY month;
+
+-- Cohort Analysis
+
+WITH customer_cohort AS (
+    SELECT
+        customer_id,
+        MIN(DATE_TRUNC('month', order_date)) AS cohort_month
+    FROM fact_orders
+    GROUP BY customer_id
+)
+
+SELECT
+    cohort_month,
+    COUNT(DISTINCT customer_id) AS customers
+FROM customer_cohort
+GROUP BY cohort_month
+ORDER BY cohort_month;
+
+-- Funnel Analysis
+
+SELECT
+    event_type,
+    COUNT(DISTINCT customer_id) AS unique_customers
+FROM fact_web_events
+GROUP BY event_type
+ORDER BY unique_customers DESC;
+
