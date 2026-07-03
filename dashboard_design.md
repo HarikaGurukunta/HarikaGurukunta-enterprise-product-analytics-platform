@@ -1,27 +1,33 @@
-# Power BI Dashboard Plan
+# Dashboard Design
 
-## Executive Overview
-- Total Revenue
-- Total Orders
-- Total Customers
-- Retention Rate
+## Page 1 - Executive Overview
+Top KPI Cards:
+- Revenue
+- Orders
+- Customers
+- Retention
 
-## Customer 360
-- Customer Lifetime Value
-- Top Customers
-- Customer Segmentation
-
-## Product Performance
+Charts:
+- Revenue Trend
 - Revenue by Category
-- Top Products
 
-## Funnel Analysis
-- Page View
-- Product View
-- Add to Cart
-- Checkout
-- Purchase
+## Page 2 - Customer 360
+Charts:
+- Customer Distribution
+- Top Customers
+- CLV Analysis
 
-## Cohort & Retention
-- Monthly Cohorts
-- Retention Trends
+## Page 3 - Product Performance
+Charts:
+- Product Revenue
+- Product Category Analysis
+
+## Page 4 - Funnel Analysis
+Charts:
+- Funnel Conversion
+- Event Distribution
+
+## Page 5 - Cohort Analysis
+Charts:
+- Cohort Matrix
+- Retention Trend
