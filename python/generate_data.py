@@ -1,22 +1,17 @@
-CREATE TABLE dim_products (
-    product_id INT PRIMARY KEY,
-    product_name VARCHAR(100),
-    category VARCHAR(50),
-    price DECIMAL(10,2)
-);
+import pandas as pd
+import numpy as np
 
-CREATE TABLE fact_orders (
-    order_id INT PRIMARY KEY,
-    customer_id INT,
-    product_id INT,
-    order_date DATE,
-    quantity INT,
-    revenue DECIMAL(10,2)
-);
+np.random.seed(42)
 
-CREATE TABLE fact_web_events (
-    event_id INT PRIMARY KEY,
-    customer_id INT,
-    event_type VARCHAR(50),
-    event_date DATE
-);
+customers = pd.DataFrame({
+    "customer_id": range(1, 1001),
+    "age": np.random.randint(18, 70, 1000),
+    "city": np.random.choice(
+        ["New York", "Chicago", "Dallas", "Los Angeles"],
+        1000
+    )
+})
+
+customers.to_csv("customers.csv", index=False)
+
+print("Customer data generated successfully!")
