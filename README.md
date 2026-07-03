@@ -1,3 +1,4 @@
+# Enterprise Product Analytics Platform
 
 ## Overview
 This project analyzes customer behavior, product performance, retention trends, and revenue metrics using SQL, Python, and Power BI.
